@@ -1,2 +1,2 @@
 # blog
-a own site forblogging
+a own site for blogging
