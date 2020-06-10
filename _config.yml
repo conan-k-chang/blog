@@ -23,7 +23,7 @@ name: "Conan Chang"
 email: cheongkuokpan@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Conan Chang's Blog, for record some technical post.
-baseurl: "/blog/" # the subpath of your site, e.g. /blog
+baseurl: "/blog" # the subpath of your site, e.g. /blog
 url: "https://conan-k-chang.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: I_HAVE_NO_TWITTER
 github_username:  conan-k-chang
