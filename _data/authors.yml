@@ -1,0 +1,10 @@
+# Authors
+
+Conan Chang:
+  name        : "Conan Chang"
+  bio         : "It is so great to work with computer."
+  avatar      : "/assets/images/fa.jpg"
+  links:
+    - label: "Website"
+      icon: "fas fa-fw fa-link"
+      url: "https://www.cakeresume.com/s--TDIw3ly7Pg5WsANfKSD0jQ--/conan-chang"
