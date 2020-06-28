@@ -31,7 +31,7 @@ Operating System: CentOS Linux 8 (Core)
 
 下載 RKE 
 ===
-我用的是`rke_linux-amd64`，其他環境去release裡找 <https://github.com/rancher/rke/releases>
+我用的是`rke_linux-amd64`，其他環境可以去 release 裡找 <https://github.com/rancher/rke/releases>
 
 ```bash
 curl -L https://github.com/rancher/rke/releases/download/v1.1.3/rke_linux-amd64 -o rke_linux-amd64
@@ -49,7 +49,7 @@ mv rke /usr/bin/rke
 然後確定能用
 
 ```bash
-[docker_user@localhost rke]$ rke --version
+[root@localhost rke]$ rke --version
 rke version v1.1.3
 ```
 
@@ -122,10 +122,10 @@ curl https://releases.rancher.com/install-docker/18.09.2.sh | sh
 確定版本
 
 ```bash
-rpm -q docker-ce
+[root@localhost rke]$ rpm -q docker-ce
+`docker-ce-18.09.2-3.el7.x86_64
 ```
-     
-應該會回傳 `docker-ce-18.09.2-3.el7.x86_64`
+
 
 
 然後順便把 docker 變開機啟動吧
@@ -176,7 +176,7 @@ su docker_user
 docker run hello-world
 ```
 
-* 話說之前很常打開一些機器發現如果要用 docker 指令都要切到 root。原來是少了一個步驟
+* 話說之前很常打開一些機器發現如果要用 docker 指令都要切到 root(或者用 sudo)。原來是少了一個步驟
 
 
 準備 RKE 的 config 檔: cluster.yml
@@ -192,9 +192,9 @@ rke config --name cluster.yml
 然後就會有一堆資料讓你填，用來設定。
 有幾個重點
 
- - `Cluster Level SSH Private Key Path`: 等下會建個 ssh key，就是放在這個路徑底下(這是預設路徑)
+ - `Cluster Level SSH Private Key Path`: 等下會建個 ssh 金鑰，就是放在這個路徑底下(預設路徑)
  - `SSH Address of host`: 機器 IP
- - `SSH User of host`: 這個放 docker_user，也就是剛專門建出來操作 docker 的
+ - `SSH User of host`: 這個填 docker_user，也就是剛專門建出來操作 docker 的使用者
 
 完整設定:
 
@@ -407,8 +407,12 @@ kube-system       Active   57m
 心情舒發
 ===
 眾所周知，Kubernetes的安裝的很複雜。普羅大眾都會想要有個簡單的試驗環境做一些測試之類的事情。
+
 而 `minikube` 這種很好上手，但是只適合很簡單的學習 Kubernetes。要拿來安裝各種工具會遇到問題。
 之前也有用過 `micork8s`，不過也是在 docker 路徑、kubelet路徑各種踩雷。
 所以也多嘗試一種，只是安裝過程還真的蠻多步驟的，沒有很友善 XD。
 
-不過以後可能會有些需要在 k8s cluster 上的測試/學習，希望用這套能順利。
+然後好像還有個 `cluster.rkestate` 沒有用到，還不知幹嘛用的XD。
+
+
+以後可能會有些需要在 k8s cluster 上的測試/學習，希望用這套能順利。
