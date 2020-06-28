@@ -32,6 +32,7 @@ github_username:  conan-k-chang
 markdown: kramdown
 #theme: minima
 #theme: minimal-mistakes-jekyll
+minimal_mistakes_skin: "dark"
 plugins:
   - jekyll-feed
   - jekyll-include-cache

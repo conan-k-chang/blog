@@ -1,9 +1,11 @@
 ---
 layout: single
 title:  "The first post"
-date:   2020-06-10 01:00:00 +0800
+date:   2020-06-10 01:00:01 +0800
 categories: study
 author: "Conan Chang"
+ref: first_post
+lang: en
 ---
 
 Developer should have a blog
