@@ -404,7 +404,7 @@ kube-public       Active   57m
 kube-system       Active   57m
 ```
 
-心情舒發
+心情抒發
 ===
 眾所周知，Kubernetes的安裝的很複雜。普羅大眾都會想要有個簡單的試驗環境做一些測試之類的事情。
 
