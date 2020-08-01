@@ -15,23 +15,25 @@ lang: zh
 簡介
 ===
 OpenFaaS 就是一個在 Kubernetes 上建購像 AWS Lambda 一樣的 (Serverless) 平台。
-不過老實說，我更傾向用 Function as a Service (FaaS) 來理解它。因為所謂的 Serverless 就是把 Server 這一層本來開發人員要處理的事情外包，讓開發人員可以只專心寫 Function。用 Serverless 這個寫感覺把事情變得很複雜。
+不過老實說，我更傾向用 Function as a Service (FaaS) 來理解它。因為所謂的 Serverless 就是把 Server 這一層本來開發人員要處理的事情外包，讓開發人員可以只專心寫 Function。用 Serverless 這個字感覺把事情變得很複雜。
 用 FaaS 來理解還能跟 IaaS, PaaS, SaaS 連上關係。 ~~不好意思扯遠了XD~~
 
 功能
 ===
-OpenFaaS 這個平台提供的事情就是讓你在開發的時候省下很多時間去做一些每個 Web Application 都需要做的事情。
+`OpenFaaS` 這個平台提供的事情就是讓你在開發的時候省下很多時間去做一些每個 Web Application 都需要做的事情。
 例如：
  - Serverless 背後的 Server：你開發的功能一定是放在一個 Web server 上的，OpenFaaS 讓你可以只寫 Function ，然後就可以部署這個 Function 來使用了。
- - 提供 async function 的架構，讓你不用管 queue server 那些事情。反正部下去就能有 async function 能用了
- - Metrics 的收集：例如 Server 收到多少 Requests，回傳了多少個 500 之類的
- - K8S yaml 的撰寫
+ - 提供 async function 的架構，讓你不用管 queue server 那些事情。反正部下去就能有 async function 能用了。
+ - Metrics 的收集：openfaas 自帶 prometheus ，例如 Server 收到多少 Requests，回傳了多少個 500 之類的都不用開發者煩腦
+ - K8S yaml 的撰寫：每個放在 K8S 上的 Application 大概都需要一個 Service, Deployment，OpenFaaS 可以讓開發者用 deploy function 的概念完成這個動作。
+
+ p.s. 看起來 OpenFaaS 蠻方便的，但是蠻方便跟客製化當然存在一定的抵觸。像是 K8S 的 Deployment 想要來點特殊的設定就還是要再修改，或者直接放棄它的 Deploy 功能，自己寫自己要的 yaml 。
 
 安裝
 ===
 安裝方法其實有三種 [ref](https://docs.openfaas.com/deployment/kubernetes/#b-deploy-with-helm-for-production-most-configurable)
 1. arkade: OpenFaaS 自己的工具，而我沒事不想又安裝個東西，所以不用這個
-2. Helm: 用 Helm 的話可以有一些 Configuration 可以設，所以本篇會使用 Helm 來安裝
+2. Helm: 用 Helm 的話可以有一些 Configuration 可以設，`所以本篇會使用 Helm 來安裝`
 3. 寫好的 yaml: 其實就跟第二點類似，不過就是不能改設定
 
 如果沒有 Helm 的話要先安裝
@@ -44,7 +46,7 @@ curl -sSLf https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
 ---
 https://github.com/openfaas/faas-netes/blob/master/chart/openfaas/README.md
 
-不過它寫的比較完整，而我使用 Helm template 的方式來安裝。所以以下就是我的安裝步驟
+不過它寫的比較完整，而我使用 Helm template 的方式來安裝。以下就是我從中挑出來的安裝步驟
 
 首先來 clone 它
 ```bash
@@ -107,7 +109,7 @@ namespace/openfaas-fn created
 secret/basic-auth created
 ```
 
-Apply OpenFaaS 所有部件
+Apply OpenFaaS 所有部件，也就是剛才 Helm template 產生出來的 openfaas.yaml
 ```bash
 [root@localhost faas-netes]# kubectl apply -f openfaas.yaml
 serviceaccount/openfaas-controller created
@@ -133,9 +135,10 @@ deployment.apps/nats created
 deployment.apps/prometheus created
 deployment.apps/queue-worker created
 ```
-OpenFaaS 有一點是做的挺好的，就是它是 Kubernetes Native 的，所以安裝過程我都沒有遇過問題。
+OpenFaaS 有一點是做的挺好的，就是它是 Kubernetes Native 的，所以安裝過程我都沒有遇過問題，後續的使用也很簡單。
 
 裝完的話會有這些東西：
+值得注意的是預設會有開一個 NodePort 31112，也是方便剛開始測試用的，可以用瀏覽器直接連進去看他的 Portal。這個 NodePort 在之後也應該要被刪除，改用 Ingress 來 expose
 ```bash
 [root@localhost faas-netes]# kubectl get all -n openfaas
 NAME                                     READY   STATUS    RESTARTS   AGE
@@ -185,7 +188,7 @@ curl -sSL https://cli.openfaas.com | sudo sh
 
 部署第一個 Function
 ===
-先登入 faas gateway。 faas gateway 就是整個 OpenFaaS 的中控，要先登入才能進行操作
+先登入 faas gateway。 faas gateway 就是整個 OpenFaaS 的中控，要先登入才能進行操作。小提醒一下，以下操作都是在安裝 OpenFaaS 的主機上操作，所以可以直接用 ClusterIP 連接，如果你是在別台機器操作的話可以選擇用 NodePort 來連。
 ```bash
 # 找一下faas gateway 在哪
 gateway_ip=$(kubectl get service/gateway -n openfaas -ojsonpath='{.spec.clusterIP}')
@@ -235,7 +238,7 @@ WARNING! Communication is not secure, please consider using HTTPS. Letsencrypt.o
 Deployed. 202 Accepted.
 URL: http://10.43.13.40:8080/function/nodeinfo
 ```
-要出現 202 本是部署成功喔
+要出現 202 才是部署成功喔
 
 最後來看看結果
 ```bash
@@ -248,3 +251,6 @@ Total mem: 13189MB
 Platform: linux
 Uptime: 1437007
 ```
+這樣就大功告成了。
+
+之後就是要寫自己的 function 。
