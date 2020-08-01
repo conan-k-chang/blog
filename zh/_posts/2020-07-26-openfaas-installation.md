@@ -5,6 +5,8 @@ date:   2020-07-26 01:00:00 +0800
 categories: study
 author: "Conan Chang"
 lang: zh
+toc: true
+toc_label: "目錄"
 ---
 
 作者的OS
