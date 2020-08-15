@@ -11,12 +11,12 @@ toc_label: "目錄"
 
 作者的OS
 ===
-其實網路上已經有一大堆安裝的教學了，不過聽了幾篇發現講的都不太深入。
+其實網路上已經有一大堆安裝的教學了，不過看了幾篇發現講的都不太深入。
 本身公司是有在用 OpenFaaS的，所以我也研究了不少，就打算寫一系列關於我對 OpenFaaS 的了解
 
 簡介
 ===
-OpenFaaS 就是一個在 Kubernetes 上建購像 AWS Lambda 一樣的 (Serverless) 平台。
+OpenFaaS 就是一個在 Kubernetes 上建構像 AWS Lambda 一樣的 (Serverless) 平台。
 不過老實說，我更傾向用 Function as a Service (FaaS) 來理解它。因為所謂的 Serverless 就是把 Server 這一層本來開發人員要處理的事情外包，讓開發人員可以只專心寫 Function。用 Serverless 這個字感覺把事情變得很複雜。
 用 FaaS 來理解還能跟 IaaS, PaaS, SaaS 連上關係。 ~~不好意思扯遠了XD~~
 
